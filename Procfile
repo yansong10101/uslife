@@ -1,1 +1,1 @@
-web: gunicorn hookupdesign.wsgi --log-file -
+web: gunicorn uslife.wsgi --log-file -
