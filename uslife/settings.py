@@ -89,10 +89,7 @@ if DEVELOPMENT:
     }
 else:
     DATABASES = {
-        'default': {
-            'default': dj_database_url.parse(
-            os.environ.get('DATABASE_URL', None))
-        }
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL', None))
     }
 
 
