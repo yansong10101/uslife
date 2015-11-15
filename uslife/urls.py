@@ -6,10 +6,11 @@ from django.contrib import admin
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^administration/', include('administration.urls', namespace='administration', app_name='administration')),
 )
 
-# if DEVELOPMENT_MODE:
-#     urlpatterns += patterns(
-#         url(r'^administration/', include('administration.urls', namespace='administration', app_name='administration')),
-#     )
+if DEVELOPMENT_MODE:
+    urlpatterns = patterns(
+        '',
+        url(r'^admin/', include(admin.site.urls)),
+        url(r'^administration/', include('administration.urls', namespace='administration', app_name='administration')),
+    )
