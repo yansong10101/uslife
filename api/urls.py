@@ -6,7 +6,7 @@ from api.restful import administration_api
 
 urlpatterns = patterns(
     '',
-    url(r'^$', include(site.urls)),
+    # url(r'^$', include(site.urls)),
     url(r'customers/$', administration_api.CustomerList.as_view(), name='customer-list'),
 )
 
