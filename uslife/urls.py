@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from uslife.settings import DEVELOPMENT_MODE
-import administration
 from django.contrib import admin
+import api
 
 urlpatterns = patterns(
     '',
@@ -12,5 +12,5 @@ if DEVELOPMENT_MODE:
     urlpatterns = patterns(
         '',
         url(r'^admin/', include(admin.site.urls)),
-        url(r'^administration/', include('administration.urls', namespace='administration', app_name='administration')),
+        url(r'^api/', include('api.urls', namespace='api', app_name='api')),
     )

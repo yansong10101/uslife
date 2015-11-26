@@ -3,7 +3,4 @@
 *.pyc
 *.diff
 /.idea/
-/*/test.py
 /*/test.html
-/administration/urls.py
-/administration/views.py

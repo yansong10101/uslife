@@ -2,13 +2,13 @@ from django.db import models
 # from administration.models import University
 
 
-# class FeatureGroup(models.Model):
-#     feature_name = models.CharField(max_length=150)
-#
-#     def __str__(self):
-#         return self.feature_name
-#
-#
+class FeatureGroup(models.Model):
+    feature_name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.feature_name
+
+
 # class SubFeature(models.Model):
 #     feature_group = models.ForeignKey(FeatureGroup, related_name='sub_feature_feature_group')
 #     sub_feature_name = models.CharField(max_length=150)

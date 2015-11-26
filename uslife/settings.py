@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'administration',
     'content',
     'storages',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -66,7 +67,7 @@ WSGI_APPLICATION = 'uslife.wsgi.application'
 if DEVELOPMENT_MODE:
     DATABASES = {
         'default': {
-            'NAME': 'test',
+            'NAME': 'life',
             'ENGINE': 'django.db.backends.mysql',
             'USER': 'root',
             'PASSWORD': 'newpwd',
