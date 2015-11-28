@@ -2,8 +2,12 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.utils.translation import ugettext_lazy as _
 
 from administration.models import Customer, University
+
+admin.site.site_header = _('留美帮')
+admin.site.site_title = _('留美帮')
 
 
 class UniversityAdmin(admin.ModelAdmin):

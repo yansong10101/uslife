@@ -16,7 +16,7 @@ class UniversityRetrieve(generics.RetrieveAPIView):
     serializer_class = UniversityRetrieveSerializer
 
 
-class CustomerList(generics.ListCreateAPIView):
+class CustomerList(generics.ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerListSerializer
     paginate_by = 15
