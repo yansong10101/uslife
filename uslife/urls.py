@@ -5,6 +5,7 @@ from django.contrib import admin
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/', include('api.urls', namespace='api', app_name='api')),
 )
 
 if DEVELOPMENT_MODE:
