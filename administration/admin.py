@@ -3,7 +3,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from administration.models import Customer
+from administration.models import Customer, University
+
+
+class UniversityAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'university_name', 'university_code', )
+    ordering = ('university_name', )
 
 
 class CustomerCreationForm(forms.ModelForm):
@@ -61,5 +66,5 @@ class CustomerAdmin(UserAdmin):
     ordering = ('email', )
     filter_horizontal = ()
 
-
+admin.site.register(University, UniversityAdmin)
 admin.site.register(Customer, CustomerAdmin)
