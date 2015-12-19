@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'content',
     'storages',
     'rest_framework',
-    'waliki',
+    # 'waliki',
 )
 
 MIDDLEWARE_CLASSES = (
