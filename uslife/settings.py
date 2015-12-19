@@ -176,31 +176,32 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
 #         },
 #     },
 # }
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/Users/zys/Desktop/log',
-        },
-        'file_1': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': '/Users/zys/Desktop/log',
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        'uslife.test_case': {
-            'handlers': ['file_1'],
-            'level': 'INFO',
-            'propagate': True,
-        }
-    },
-}
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': '/Users/zys/Desktop/log',
+#         },
+#         'file_1': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': '/Users/zys/Desktop/log',
+#         },
+#     },
+#     'loggers': {
+#         'django.request': {
+#             'handlers': ['file'],
+#             'level': 'ERROR',
+#             'propagate': True,
+#         },
+#         'uslife.test_case': {
+#             'handlers': ['file_1'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         }
+#     },
+# }
