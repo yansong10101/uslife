@@ -3,4 +3,5 @@
 *.pyc
 *.diff
 /.idea/
-/*/test.html
+/*/test*
+/test_case

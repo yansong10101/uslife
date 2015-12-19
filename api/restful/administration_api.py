@@ -6,22 +6,22 @@ from rest_framework.response import Response
 
 
 class UniversityList(generics.ListCreateAPIView):
-    queryset = University.objects.all()
+    queryset = University.universities
     serializer_class = UniversityListSerializer
     paginate_by = 15
 
 
-class UniversityRetrieve(generics.RetrieveAPIView):
-    queryset = University.objects.all()
+class UniversityRetrieve(generics.RetrieveUpdateAPIView):
+    queryset = University.universities
     serializer_class = UniversityRetrieveSerializer
 
 
 class CustomerList(generics.ListAPIView):
-    queryset = Customer.objects.all()
+    queryset = Customer.customers
     serializer_class = CustomerListSerializer
     paginate_by = 15
 
 
 class CustomerRetrieve(generics.RetrieveAPIView):
-    queryset = Customer.objects.all()
+    queryset = Customer.customers
     serializer_class = CustomerRetrieveSerializer

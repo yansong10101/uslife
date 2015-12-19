@@ -27,7 +27,7 @@ SECRET_KEY = '5)riygtp^j%(stpx8##wo3gl+r^cg^(^*pc2-#r_8_ki@kn!_^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
 
 DEVELOPMENT_MODE = os.path.exists("/Users/zys")
 
@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'content',
     'storages',
     'rest_framework',
+    'waliki',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -94,14 +95,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR,  'templates'),
-)
+# TEMPLATE_DIRS = (
+#     os.path.join(BASE_DIR,  'templates'),
+# )
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': TEMPLATE_DIRS,
+        'DIRS': [os.path.join(BASE_DIR,  'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,6 +115,7 @@ TEMPLATES = [
     },
 ]
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -121,7 +123,84 @@ STATIC_URL = '/static/'
 
 # AWS S3 setup
 
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY', None)
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
+# AWS Buckets setup
+AWS_BUCKET_PREFIX = 'uslife'
+AWS_BUCKET_DEFAULT_SITE = 'uslife-archive'
+AWS_BUCKET_ORG_ARCHIVE = 'uslife-org-archive'
+AWS_BUCKET_USER_ARCHIVE = 'uslife-user-archive'
+AWS_S3_DEFAULT_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_DEFAULT_SITE
+AWS_S3_ORG_ARCHIVE_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_ORG_ARCHIVE
+AWS_S3_USER_ARCHIVE_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_USER_ARCHIVE
+
+
 AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
     'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
     'Cache-Control': 'max-age=94608000',
+}
+
+
+# logging setting
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#         'file': {
+#             'level': 'ERROR',
+#             'class': 'logging.FileHandler',
+#             'filename': '/Users/zys/Desktop/logger',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+#         },
+#         'django.request': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#         'uslife.test_case': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/Users/zys/Desktop/log',
+        },
+        'file_1': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/Users/zys/Desktop/log',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'uslife.test_case': {
+            'handlers': ['file_1'],
+            'level': 'INFO',
+            'propagate': True,
+        }
+    },
 }
