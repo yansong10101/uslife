@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'storages',
     'rest_framework',
     # 'waliki',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,6 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'uslife.urls'
@@ -205,3 +207,12 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
 #         }
 #     },
 # }
+
+
+if not DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = False
+else:
+    CORS_ORIGIN_WHITELIST = (
+        'localhost',
+        '127.0.0.1',
+    )
