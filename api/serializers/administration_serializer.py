@@ -1,4 +1,5 @@
 from administration.models import Customer, University
+from content.models import FeatureGroup
 from rest_framework import serializers
 
 
@@ -21,10 +22,24 @@ class CustomerListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ('url', 'email', 'first_name', 'last_name', 'created_date', 'last_modified_date', )
+        fields = ('url', 'university', 'email', 'first_name', 'last_name', 'created_date', 'last_modified_date', )
 
 
 class CustomerRetrieveSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Customer
-        fields = ('pk', 'email', 'first_name', 'last_name', 'created_date', 'last_modified_date', )
+        fields = ('pk', 'university', 'email', 'first_name', 'last_name', 'created_date', 'last_modified_date', )
+
+
+class FeatureGroupListSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='api:feature-group-retrieve')
+
+    class Meta:
+        model = FeatureGroup
+        fields = ('url', 'pk', 'feature_name', 'display_name', )
+
+
+class FeatureGroupRetrieveSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = FeatureGroup
+        fields = ('pk', 'feature_name', 'display_name', )

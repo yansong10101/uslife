@@ -15,6 +15,8 @@ class UniversityManager(models.Manager):
         3. grant all permissions to president
         4. can create group
     """
+    def create_university(self, **kwargs):
+        pass
 
     def get_queryset(self, is_active=True):
         return super(UniversityManager, self).get_queryset().filter(is_active=is_active)
