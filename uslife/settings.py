@@ -44,7 +44,6 @@ INSTALLED_APPS = (
     'content',
     'storages',
     'rest_framework',
-    # 'waliki',
     'corsheaders',
 )
 
@@ -208,9 +207,9 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
 #     },
 # }
 
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = (
-    'localhost',
-    '127.0.0.1',
-)
+if DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ORIGIN_WHITELIST = (
+        'localhost',
+        '127.0.0.1',
+    )
