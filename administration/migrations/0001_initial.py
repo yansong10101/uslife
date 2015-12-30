@@ -62,7 +62,6 @@ class Migration(migrations.Migration):
                 ('is_president', models.BooleanField(editable=False, default=False)),
                 ('is_admin', models.BooleanField(editable=False, default=False)),
                 ('prior_level', models.IntegerField(default=0)),
-                ('permission', models.ManyToManyField(to='content.Permission', related_name='org_permission')),
                 ('permission_group', models.ManyToManyField(to='content.PermissionGroup', related_name='org_permission_group')),
             ],
             options={
