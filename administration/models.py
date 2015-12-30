@@ -16,7 +16,16 @@ class UniversityManager(models.Manager):
         4. can create group
     """
     def create_university(self, **kwargs):
-        pass
+        university = self.create(**kwargs)
+        return UniversityManager.update_university_features(university)
+
+    @staticmethod
+    def update_university_features(university):
+        features = Feature.features.all()
+        for feature in features:
+            # FIXME : check if feature already exists in this university, update all university when create new feature
+            university.feature.add(feature)
+        return university
 
     def get_queryset(self, is_active=True):
         return super(UniversityManager, self).get_queryset().filter(is_active=is_active)
@@ -72,7 +81,7 @@ class OrgAdminManager(BaseUserManager):
 
 class OrgAdmin(AbstractBaseUser):
     university = models.ForeignKey(University, related_name='org_admin_university')
-    permission = models.ManyToManyField(Permission, related_name='org_permission')
+    # permission = models.ManyToManyField(Permission, related_name='org_permission')
     permission_group = models.ManyToManyField(PermissionGroup, related_name='org_permission_group')
     username = models.CharField(_('username'), max_length=50, unique=True,
                                 help_text=_('Required. 30 characters or fewer. Letters, digits and '
@@ -205,3 +214,6 @@ class CustomerUPG(models.Model):
     grant_level = models.IntegerField(default=0, verbose_name='grant user level')
 
     db_table = 'customer_university_permission'
+
+    def __str__(self):
+        return '-'.join((self.customer, self.university, self.permission_group, self.grant_level))

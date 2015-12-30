@@ -12,28 +12,6 @@ class UniversityAdmin(admin.ModelAdmin):
     ordering = ('university_name', )
 
 
-class CustomerAdmin(UserAdmin):
-    # form = CustomerChangeForm
-    add_form = CustomerCreationForm
-
-    list_display = ('email', 'is_active', 'is_admin', 'first_name', 'last_name', )
-    list_filter = ('is_admin', )
-    fieldsets = (
-        (None, {'fields': ('email', 'password', ), }),
-        ('Personal info', {'fields': ('first_name', 'last_name', ), }),
-        # ('Permissions', {'fields': ('is_admin', )}),
-    )
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide', ),
-            'fields': ('university', 'email', 'password1', 'password2', 'first_name', 'last_name', )
-        }),
-    )
-    search_fields = ('email', )
-    ordering = ('email', )
-    filter_horizontal = ()
-
-
 class OrgUserAdmin(UserAdmin):
     add_form = OrgAdminCreateForm
 
@@ -51,6 +29,28 @@ class OrgUserAdmin(UserAdmin):
     )
     search_fields = ('username', )
     ordering = ('username', )
+    filter_horizontal = ()
+
+
+class CustomerAdmin(UserAdmin):
+    # form = CustomerChangeForm
+    add_form = CustomerCreationForm
+
+    list_display = ('email', 'is_active', 'is_admin', 'first_name', 'last_name', )
+    list_filter = ('is_admin', )
+    fieldsets = (
+        (None, {'fields': ('email', 'password', ), }),
+        ('Personal info', {'fields': ('first_name', 'last_name', ), }),
+        # ('Permissions', {'fields': ('is_admin', )}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide', ),
+            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', )
+        }),
+    )
+    search_fields = ('email', )
+    ordering = ('email', )
     filter_horizontal = ()
 
 admin.site.register(University, UniversityAdmin)

@@ -1,6 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from administration.models import University, Customer, OrgAdmin
+from administration.models import University, OrgAdmin, Customer, CustomerUPG
+
+
+class UniversityForm(forms.ModelForm):
+
+    class Meta:
+        model = University
+        fields = ('university_name', 'university_code', )
 
 
 class CustomerCreationForm(forms.ModelForm):
@@ -58,3 +65,10 @@ class OrgAdminCreateForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class CustomerUPGForm(forms.ModelForm):
+
+    class Meta:
+        model = CustomerUPG
+        fields = ('customer', 'university', 'permission_group', 'grant_level', )
