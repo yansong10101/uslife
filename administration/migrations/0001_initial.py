@@ -41,8 +41,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
                 ('grant_level', models.IntegerField(default=0, verbose_name='grant user level')),
-                ('customer', models.ManyToManyField(to='administration.Customer', related_name='customer_upg_customer')),
-                ('permission_group', models.ManyToManyField(to='content.PermissionGroup', related_name='customer_upg_permission_group')),
+                ('customer', models.ForeignKey(to='administration.Customer', related_name='customer_upg_customer')),
+                ('permission_group', models.ForeignKey(to='content.PermissionGroup', related_name='customer_upg_permission_group')),
             ],
         ),
         migrations.CreateModel(
@@ -97,6 +97,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customerupg',
             name='university',
-            field=models.ManyToManyField(to='administration.University', related_name='customer_upg_university'),
+            field=models.ForeignKey(to='administration.University', related_name='customer_upg_university'),
         ),
     ]

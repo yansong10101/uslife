@@ -39,5 +39,7 @@ urlpatterns = patterns(
     url(r'customers/create/$', administration_api.create_customer, name='customer-creation'),
 
     url(r'customer-upg/$', administration_api.CustomerUPGList.as_view(), name='customer-upg-list'),
-    url(r'customer-upg/(?P<pk>[0-9]+)/$', administration_api.CustomerUPGRetrieve.as_view(), name='customer-upg-retrieve'),
+    url(r'customer-upg/(?P<pk>[0-9]+)/$', administration_api.CustomerUPGRetrieve.as_view(),
+        name='customer-upg-retrieve'),
+    url(r'customer-upg/create/$', administration_api.create_customer_upg, name='customer-upg-creation'),
 )

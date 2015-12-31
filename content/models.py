@@ -35,6 +35,7 @@ class FeatureManager(models.Manager):
         1. add to administration permission model
     """
     def create_feature(self, **kwargs):
+        # FIXME : update all universities to add this new feature
         feature = self.create(**kwargs)
         Permission.permissions.create_permission(feature)   # create corresponding permissions based on feature
         return feature

@@ -90,11 +90,23 @@ def create_customer(request):
 
 # CustomerUPG APIs
 class CustomerUPGList(generics.ListAPIView):
-    queryset = CustomerUPG.objects
+    queryset = CustomerUPG.customer_upg
     serializer_class = CustomerUPGListSerializer
     paginate_by = 15
 
 
 class CustomerUPGRetrieve(generics.RetrieveAPIView):
-    queryset = CustomerUPG.objects
+    queryset = CustomerUPG.customer_upg
     serializer_class = CustomerUPGRetrieveSerializer
+
+
+@api_view(['POST', ])
+def create_customer_upg(request):
+    response_data = {}
+    if request.method == 'POST':
+        form = CustomerUPGForm(request.POST)
+        if not form.is_valid() or form.validate_existing():
+            return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
+        CustomerUPG.customer_upg.create_customer_upg(**form.cleaned_data)
+        return Response(data=response_data, status=status.HTTP_201_CREATED)
+    return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)

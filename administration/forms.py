@@ -72,3 +72,12 @@ class CustomerUPGForm(forms.ModelForm):
     class Meta:
         model = CustomerUPG
         fields = ('customer', 'university', 'permission_group', 'grant_level', )
+
+    def validate_existing(self):
+        customer = self.cleaned_data.get('customer')
+        university = self.cleaned_data.get('university')
+        permission_group = self.cleaned_data.get('permission_group')
+        if CustomerUPG.customer_upg.all().filter(customer=customer, permission_group=permission_group,
+                                                 university=university).exists():
+            return True
+        return False

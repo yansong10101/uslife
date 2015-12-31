@@ -23,7 +23,7 @@ class UniversityManager(models.Manager):
     def update_university_features(university):
         features = Feature.features.all()
         for feature in features:
-            # FIXME : check if feature already exists in this university, update all university when create new feature
+            # FIXME : check if feature already exists in this university
             university.feature.add(feature)
         return university
 
@@ -81,7 +81,6 @@ class OrgAdminManager(BaseUserManager):
 
 class OrgAdmin(AbstractBaseUser):
     university = models.ForeignKey(University, related_name='org_admin_university')
-    # permission = models.ManyToManyField(Permission, related_name='org_permission')
     permission_group = models.ManyToManyField(PermissionGroup, related_name='org_permission_group')
     username = models.CharField(_('username'), max_length=50, unique=True,
                                 help_text=_('Required. 30 characters or fewer. Letters, digits and '
@@ -204,16 +203,28 @@ class Customer(AbstractBaseUser):
         return self.email
 
 
+class CustomerUPGManager(models.Manager):
+
+    def create_customer_upg(self, **kwargs):
+        customer_upg = self.create(**kwargs)
+        return customer_upg
+
+    def get_queryset(self, **kwargs):
+        return super(CustomerUPGManager, self).get_queryset().filter(**kwargs)
+
+
 class CustomerUPG(models.Model):
     """
     CustomerUPG == Customer University Permission Group
     """
-    customer = models.ManyToManyField(Customer, related_name='customer_upg_customer')
-    university = models.ManyToManyField(University, related_name='customer_upg_university')
-    permission_group = models.ManyToManyField(PermissionGroup, related_name='customer_upg_permission_group')
+    customer = models.ForeignKey(Customer, related_name='customer_upg_customer')
+    university = models.ForeignKey(University, related_name='customer_upg_university')
+    permission_group = models.ForeignKey(PermissionGroup, related_name='customer_upg_permission_group')
     grant_level = models.IntegerField(default=0, verbose_name='grant user level')
 
     db_table = 'customer_university_permission'
+    objects = models.Manager()
+    customer_upg = CustomerUPGManager()
 
     def __str__(self):
-        return '-'.join((self.customer, self.university, self.permission_group, self.grant_level))
+        return '-'.join((str(self.customer), str(self.university), str(self.permission_group), str(self.grant_level)))

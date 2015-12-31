@@ -1,4 +1,5 @@
 from administration.models import Customer, University, OrgAdmin, CustomerUPG
+from api.serializers.content_serializer import PermissionGroupRetrieveSerializer
 from rest_framework import serializers
 
 
@@ -49,14 +50,21 @@ class CustomerRetrieveSerializer(serializers.HyperlinkedModelSerializer):
 
 # Customer University Permission Group serializer
 class CustomerUPGListSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='api:customer-upg-retrieve')
+    customer = CustomerRetrieveSerializer(read_only=True)
+    university = UniversityRetrieveSerializer(read_only=True)
+    permission_group = PermissionGroupRetrieveSerializer(read_only=True)
 
     class Meta:
         model = CustomerUPG
-        fields = ('customer', 'university', 'permission_group', 'grant_level', )
+        fields = ('pk', 'url', 'customer', 'university', 'permission_group', 'grant_level', )
 
 
 class CustomerUPGRetrieveSerializer(serializers.HyperlinkedModelSerializer):
+    customer = CustomerRetrieveSerializer(read_only=True)
+    university = UniversityRetrieveSerializer(read_only=True)
+    permission_group = PermissionGroupRetrieveSerializer(read_only=True)
 
     class Meta:
         model = CustomerUPG
-        fields = ('customer', 'university', 'permission_group', 'grant_level', )
+        fields = ('pk', 'customer', 'university', 'permission_group', 'grant_level', )
