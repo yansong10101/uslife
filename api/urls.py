@@ -8,7 +8,8 @@ urlpatterns = patterns(
     url(r'feature-groups/$', content_api.FeatureGroupList.as_view(), name='feature-group-list'),
     url(r'feature-groups/(?P<pk>[0-9]+)/$', content_api.FeatureGroupDetail.as_view(), name='feature-group-retrieve'),
     url(r'feature-groups/create/$', content_api.create_update_feature_group, name='feature-group-creation'),
-    url(r'feature-groups/update/(?P<pk>[0-9]+)/$', content_api.create_update_feature_group, name='feature-group-update'),
+    url(r'feature-groups/update/(?P<pk>[0-9]+)/$', content_api.create_update_feature_group,
+        name='feature-group-update'),
 
     url(r'features/$', content_api.FeatureList.as_view(), name='feature-list'),
     url(r'features/(?P<pk>[0-9]+)/$', content_api.FeatureDetail.as_view(), name='feature-retrieve'),
@@ -41,5 +42,6 @@ urlpatterns = patterns(
     url(r'customer-upg/$', administration_api.CustomerUPGList.as_view(), name='customer-upg-list'),
     url(r'customer-upg/(?P<pk>[0-9]+)/$', administration_api.CustomerUPGRetrieve.as_view(),
         name='customer-upg-retrieve'),
-    url(r'customer-upg/create/$', administration_api.create_customer_upg, name='customer-upg-creation'),
+    url(r'customer-upg/create/$', administration_api.create_update_customer_upg, name='customer-upg-creation'),
+    url(r'customer-upg/update/$', administration_api.create_update_customer_upg, name='customer-upg-update'),
 )

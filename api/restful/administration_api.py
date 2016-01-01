@@ -101,12 +101,15 @@ class CustomerUPGRetrieve(generics.RetrieveAPIView):
 
 
 @api_view(['POST', ])
-def create_customer_upg(request):
+def create_update_customer_upg(request):
     response_data = {}
     if request.method == 'POST':
         form = CustomerUPGForm(request.POST)
-        if not form.is_valid() or form.validate_existing():
+        if not form.is_valid():
             return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
-        CustomerUPG.customer_upg.create_customer_upg(**form.cleaned_data)
+        if not form.validate_existing():
+            CustomerUPG.customer_upg.create_customer_upg(**form.cleaned_data)
+        else:
+            form.update_customer_university_group()
         return Response(data=response_data, status=status.HTTP_201_CREATED)
     return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)

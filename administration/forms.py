@@ -76,8 +76,21 @@ class CustomerUPGForm(forms.ModelForm):
     def validate_existing(self):
         customer = self.cleaned_data.get('customer')
         university = self.cleaned_data.get('university')
-        permission_group = self.cleaned_data.get('permission_group')
-        if CustomerUPG.customer_upg.all().filter(customer=customer, permission_group=permission_group,
-                                                 university=university).exists():
+        if CustomerUPG.customer_upg.all().filter(customer=customer, university=university).exists():
             return True
         return False
+
+    def update_customer_university_group(self):
+        customer = self.cleaned_data.get('customer')
+        university = self.cleaned_data.get('university')
+        permission_group = self.cleaned_data.get('permission_group')
+        grant_level = self.cleaned_data.get('grant_level')
+        customer_in_university = CustomerUPG.customer_upg.all().filter(customer=customer, university=university) or None
+        if customer_in_university is None or customer_in_university.count() > 1:
+            # TODO : write validation
+            raise Exception('Duplicated object !')
+        elif customer_in_university.count() == 1:
+            customer_in_university[0].permission_group = permission_group
+            customer_in_university[0].grant_level = grant_level
+            customer_in_university[0].save()
+        return customer_in_university[0]
