@@ -27,9 +27,9 @@ SECRET_KEY = '5)riygtp^j%(stpx8##wo3gl+r^cg^(^*pc2-#r_8_ki@kn!_^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
-
 DEVELOPMENT_MODE = os.path.exists("/Users/zys")
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
 
 # Application definition
 
@@ -130,12 +130,10 @@ STATIC_URL = '/static/'
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY', None)
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
 # AWS Buckets setup
-AWS_BUCKET_PREFIX = 'uslife'
-AWS_BUCKET_DEFAULT_SITE = 'uslife-archive'
-AWS_BUCKET_ORG_ARCHIVE = 'uslife-org-archive'
+AWS_BUCKET_PREFIX = 'lmb'
+AWS_BUCKET_DEFAULT_SITE = 'lmb-archive'
 AWS_BUCKET_USER_ARCHIVE = 'uslife-user-archive'
 AWS_S3_DEFAULT_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_DEFAULT_SITE
-AWS_S3_ORG_ARCHIVE_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_ORG_ARCHIVE
 AWS_S3_USER_ARCHIVE_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_USER_ARCHIVE
 
 
@@ -209,7 +207,4 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
 
 if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
-    CORS_ORIGIN_WHITELIST = (
-        'localhost',
-        '127.0.0.1',
-    )
+    CORS_ORIGIN_WHITELIST = ALLOWED_HOSTS

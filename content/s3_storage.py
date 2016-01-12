@@ -1,46 +1,133 @@
 from django.core.exceptions import ObjectDoesNotExist
 from uslife.settings import (AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_DEFAULT_SITE,
-                             AWS_BUCKET_ORG_ARCHIVE, AWS_BUCKET_USER_ARCHIVE, AWS_HEADERS, )
+                             AWS_BUCKET_USER_ARCHIVE, AWS_HEADERS, )
 from boto.s3.connection import S3Connection
+from boto.s3.key import Key
 from django.core.files.base import ContentFile
-import json
+from datetime import datetime
+import mimetypes
+
+
+def make_image_filename(key_prefix, file_extension):
+    """
+    For now, append timestamp only for image file name, because article name is unique
+    :param file_extension: file extension
+    :return: return file name with timestamp as suffix
+    """
+    if file_extension:
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S%f')
+        filename = 'image_' + timestamp + '.' + file_extension
+        return key_prefix + filename
+    else:
+        raise Exception('invalid image file type !')
+
+
+def make_org_bucket_name(university):
+    return university.university_name + '-' + university.pk
+
+
+def make_feature_name(feature):
+    return 'feature_' + feature.feature_name
+
+
+def make_post_name():
+    pass    # TODO : implement this after post model done
 
 
 class S3Storage:
-    def __init__(self):
+    def __init__(self, bucket_name=None):
         self.connection = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY)
-        self.bucket = None
+        self.bucket = self.get_bucket(bucket_name)
 
-    def key_validation(self, key_name):
-        pass  # TODO : update validator
+    def is_key_exists(self, key_name):
+        if self.bucket.get_key(key_name):
+            return True
+        return False
 
-    def get_bucket(self, bucket_name):
-        self.bucket = self.connection.get_bucket(bucket_name)
-        if self.bucket is None:
+    def upload_validator(self, key_name, is_new):
+        if is_new and self.is_key_exists(key_name):
+            raise Exception('key %s already exist !' % key_name)
+        return True
+
+    def get_bucket(self, bucket_name=None):
+        if not bucket_name:
+            return None
+        self.bucket = self.connection.lookup(bucket_name)
+        if not self.bucket:
             raise ObjectDoesNotExist('Bucket : %s Does not exist !' % bucket_name)
         return self.bucket
 
     def get_default_site_bucket(self):
+        """
+        Get LMB default bucket
+        """
         return self.get_bucket(AWS_BUCKET_DEFAULT_SITE)
 
-    def get_org_bucket(self):
-        return self.get_bucket(AWS_BUCKET_ORG_ARCHIVE)
+    def get_org_bucket(self, university):
+        """
+        Get University bucket
+        """
+        bucket_name = make_org_bucket_name(university)
+        return self.get_bucket(bucket_name)
 
     def get_user_bucket(self):
+        """
+        Get Customer bucket
+        """
         return self.get_bucket(AWS_BUCKET_USER_ARCHIVE)
 
-    def get_all_keys(self):
-        return self.bucket.list()
+    def get_sub_keys(self, prefix, suffix='/', marker=''):
+        """
+        List all specific keys by prefix, default only for one level
+        :param prefix: key prefix
+        :param suffix: default '/' means only one level
+        :param marker: for paging usage
+        :return: an instance of a BucketListResultSet that handles paging
+        """
+        return self.bucket.list(prefix=prefix, delimiter=suffix, marker=marker)
 
-    def get_keys_by_regex(self, regex):
-        pass  # TODO : Add regex to filter all target keys
+    def get_sub_keys_with_spec(self, prefix, spec, suffix='/', marker=''):
+        """
+        Call get_sub_keys() and loop to check if list of keys end with specific string
+        :param prefix:
+        :param spec: Type: String, check keys if end with specific string
+        :param suffix:
+        :param marker:
+        :return: list of Key Prefix objects
+        """
+        key_list = self.bucket.list(prefix=prefix, delimiter=suffix, marker=marker)
+        result_key_list = []
+        for key in key_list:
+            if str(key.name).endswith(spec):
+                result_key_list.append(key)
+        return result_key_list
 
-    def upload_file(self, file, key_name):
+    def _upload_file(self, file, key_name, content_type, is_wiki=False):
         new_key = self.bucket.new_key(key_name)
-        new_key.set_contents_from_file(file)
+        new_key.set_metadata('Content-Type', content_type)
+        if is_wiki:
+            new_key.set_contents_from_string(file)
+        else:
+            new_key.set_contents_from_file(file)
 
-    def upload_files(self, file_dict):
-        pass  # TODO : upload files with dictionary object. i.e. {'key_name': file, ...}
+    def upload_image(self, file, key_prefix):
+        filename = str(file)
+        content_type = mimetypes.guess_type(filename)[0]
+        # check if file is image
+        if content_type:
+            (file_type, file_extension) = str(content_type).split('/')
+            if file_type == 'image':
+                key_name = make_image_filename(key_prefix, file_extension)
+                self._upload_file(file, key_name, content_type)
+                return key_name
+        else:
+            raise Exception('Invalid file type : Not a image!')
+
+    def upload_wiki(self, file, new_key, old_key=None):
+        if old_key and self.is_key_exists(old_key):
+            self.delete_file(old_key)
+        self._upload_file(file, new_key, 'text/plain', True)
+        return new_key
 
     def download_file_as_string(self, key_name):
         target_key = self.bucket.get_key(key_name)
