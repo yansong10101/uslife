@@ -18,6 +18,13 @@ class WikiFileForm(forms.Form):
     page = forms.CharField()
 
 
+class GetKeysForm(forms.Form):
+    key_name = forms.CharField()
+    spec = forms.CharField(required=False)
+    suffix = forms.CharField(required=False)
+    marker = forms.CharField(required=False)
+
+
 @api_view(['POST', ])
 def upload_image(request):
     # FIXME : update key path and bucket name
@@ -46,4 +53,21 @@ def upload_wiki(request):
         page = form.cleaned_data['page']
         s3_key = s3.upload_wiki(page, new_key_name, old_key_name)
         return Response(data={'s3_key': s3_key}, status=status.HTTP_201_CREATED)
+    return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['POST', ])
+def get_items(request):
+    s3 = S3Storage(TEST_S3_BUCKET)
+    response_data = {}
+    if request.method == 'POST':
+        form = GetKeysForm(request.data)
+        if not form.is_valid():
+            return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
+        key_prefix = form.cleaned_data['key_name']
+        key_spec = form.cleaned_data['spec'] or None
+        key_suffix = form.cleaned_data['suffix'] or '/'
+        key_marker = form.cleaned_data['marker'] or ''
+        response_data['result_list'] = s3.get_sub_keys_with_spec(key_prefix, key_spec, key_suffix, key_marker)
+        return Response(data=response_data, status=status.HTTP_200_OK)
     return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)

@@ -2,7 +2,6 @@ from django.conf.urls import url, patterns, include
 from rest_framework import routers
 from api.restful import administration_api, content_api, s3_api
 
-
 urlpatterns = patterns(
     '',
     url(r'feature-groups/$', content_api.FeatureGroupList.as_view(), name='feature-group-list'),
@@ -45,6 +44,8 @@ urlpatterns = patterns(
     url(r'customer-upg/create/$', administration_api.create_update_customer_upg, name='customer-upg-creation'),
     url(r'customer-upg/update/$', administration_api.create_update_customer_upg, name='customer-upg-update'),
 
-    url(r'image/portal/upload/$', s3_api.upload_image, name='image-upload'),
-    url(r'wiki/portal/upload/$', s3_api.upload_wiki, name='wiki-upload'),
+    url(r'portal/image/upload/$', s3_api.upload_image, name='image-upload'),
+    url(r'portal/wiki/upload/$', s3_api.upload_wiki, name='wiki-upload'),
+    url(r'portal/keys/get/$', s3_api.get_items, name='get-keys'),
 )
+

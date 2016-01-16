@@ -82,11 +82,13 @@ class S3Storage:
         :param prefix: key prefix
         :param suffix: default '/' means only one level
         :param marker: for paging usage
-        :return: an instance of a BucketListResultSet that handles paging
+        :return: a list of keys that handles paging
         """
-        return self.bucket.list(prefix=prefix, delimiter=suffix, marker=marker)
+        keys = self.bucket.list(prefix=prefix, delimiter=suffix, marker=marker)
+        key_name_list = [key_name.name for key_name in keys]
+        return key_name_list
 
-    def get_sub_keys_with_spec(self, prefix, spec, suffix='/', marker=''):
+    def get_sub_keys_with_spec(self, prefix, spec=None, suffix='/', marker=''):
         """
         Call get_sub_keys() and loop to check if list of keys end with specific string
         :param prefix:
@@ -95,7 +97,11 @@ class S3Storage:
         :param marker:
         :return: list of Key Prefix objects
         """
-        key_list = self.bucket.list(prefix=prefix, delimiter=suffix, marker=marker)
+        key_list = self.get_sub_keys(prefix, suffix, marker)
+        for ll in key_list:
+            print(ll)
+        if not spec:
+            return key_list
         result_key_list = []
         for key in key_list:
             if str(key.name).endswith(spec):
