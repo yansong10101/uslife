@@ -66,6 +66,12 @@ class OrgAdminQuerySet(models.QuerySet):
     def org_admin(self, **kwargs):
         return self.filter(is_president=False, is_active=True, **kwargs)
 
+    def get_org_admin_by_username(self, username):
+        org_admin_list = self.filter(is_active=True, username=username)
+        if org_admin_list:
+            return org_admin_list[0]
+        return None
+
 
 class OrgAdminManager(BaseUserManager):
 
@@ -77,6 +83,9 @@ class OrgAdminManager(BaseUserManager):
 
     def org_admin(self, **kwargs):
         return self.get_queryset().org_admin(**kwargs)
+
+    def get_auth_admin(self, username):
+        return self.get_queryset().get_org_admin_by_username(username)
 
 
 class OrgAdmin(AbstractBaseUser):
@@ -134,6 +143,12 @@ class CustomerQuerySet(models.QuerySet):
     def alumni(self):
         return self.get_customers(approval_level=2)
 
+    def get_customer_by_email(self, email):
+        customer_list = self.get_customers(email=email)
+        if customer_list:
+            return customer_list[0]
+        return None
+
 
 class CustomerManager(BaseUserManager):
 
@@ -151,6 +166,9 @@ class CustomerManager(BaseUserManager):
 
     def alumni(self):
         return self.get_queryset().alumni()
+
+    def get_auth_customer(self, email):
+        return self.get_queryset().get_customer_by_email(email)
 
 
 class Customer(AbstractBaseUser):

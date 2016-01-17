@@ -1,6 +1,6 @@
 from django.conf.urls import url, patterns, include
 from rest_framework import routers
-from api.restful import administration_api, content_api, s3_api
+from api.restful import administration_api, content_api, s3_api, user_api
 
 urlpatterns = patterns(
     '',
@@ -47,5 +47,11 @@ urlpatterns = patterns(
     url(r'portal/image/upload/$', s3_api.upload_image, name='image-upload'),
     url(r'portal/wiki/upload/$', s3_api.upload_wiki, name='wiki-upload'),
     url(r'portal/keys/get/$', s3_api.get_items, name='get-keys'),
+
+    url(r'portal/customer/signup/$', user_api.customer_signup, name='customer-signup'),
+    url(r'portal/user/login/$', user_api.login, name='admin-login'),
+    url(r'portal/user/logout/$', user_api.logout, name='logout'),
+    url(r'portal/user/change-password/$', user_api.change_password, name='change-password'),
+    url(r'portal/user/reset-password/$', user_api.reset_password, name='reset-password'),
 )
 
