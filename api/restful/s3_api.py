@@ -19,7 +19,7 @@ class WikiFileForm(forms.Form):
 
 
 class GetKeysForm(forms.Form):
-    key_name = forms.CharField()
+    key_name = forms.CharField(required=False)
     spec = forms.CharField(required=False)
     suffix = forms.CharField(required=False)
     marker = forms.CharField(required=False)
