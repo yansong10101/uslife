@@ -1,4 +1,5 @@
-__author__ = 'zys'
+import os
+import dj_database_url
 
 """
 Django settings for uslife project.
@@ -13,10 +14,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-import dj_database_url
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -132,7 +131,8 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
 # AWS Buckets setup
 AWS_BUCKET_PREFIX = 'lmb'
 AWS_BUCKET_DEFAULT_SITE = 'lmb-archive'
-AWS_BUCKET_USER_ARCHIVE = 'uslife-user-archive'
+AWS_BUCKET_USER_ARCHIVE = 'lmb-user-archive'
+AWS_BUCKET_ORG_WIKI = 'lmb-org-wiki'
 AWS_S3_DEFAULT_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_DEFAULT_SITE
 AWS_S3_USER_ARCHIVE_FORMAT = 'https://%s.s3.amazonaws.com' % AWS_BUCKET_USER_ARCHIVE
 
@@ -142,69 +142,8 @@ AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
     'Cache-Control': 'max-age=94608000',
 }
 
-
-# logging setting
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#         'file': {
-#             'level': 'ERROR',
-#             'class': 'logging.FileHandler',
-#             'filename': '/Users/zys/Desktop/logger',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-#         },
-#         'django.request': {
-#             'handlers': ['file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#         'uslife.test_case': {
-#             'handlers': ['file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'filename': '/Users/zys/Desktop/log',
-#         },
-#         'file_1': {
-#             'level': 'INFO',
-#             'class': 'logging.FileHandler',
-#             'filename': '/Users/zys/Desktop/log',
-#         },
-#     },
-#     'loggers': {
-#         'django.request': {
-#             'handlers': ['file'],
-#             'level': 'ERROR',
-#             'propagate': True,
-#         },
-#         'uslife.test_case': {
-#             'handlers': ['file_1'],
-#             'level': 'INFO',
-#             'propagate': True,
-#         }
-#     },
-# }
-
-if DEBUG:
+if DEBUG or DEVELOPMENT_MODE:
     CORS_ORIGIN_ALLOW_ALL = True
     CORS_ORIGIN_WHITELIST = ALLOWED_HOSTS
+    AWS_BUCKET_USER_ARCHIVE = 'test-2016'
+    AWS_BUCKET_ORG_WIKI = 'test-2016'

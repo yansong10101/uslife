@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from django import forms
 from content.s3_storage import S3Storage
+from uslife.settings import AWS_BUCKET_ORG_WIKI
 
-TEST_S3_BUCKET = 'test-2016'
 TEST_S3_KEY_PREFIX = 'test-upload/demo-upload/'
 
 
@@ -28,7 +28,7 @@ class GetKeysForm(forms.Form):
 @api_view(['POST', ])
 def upload_image(request):
     # FIXME : update key path and bucket name
-    s3 = S3Storage(TEST_S3_BUCKET)
+    s3 = S3Storage(AWS_BUCKET_ORG_WIKI)
     response_data = {}
     if request.method == 'POST':
         form = ImageFileForm(request.POST, request.FILES)
@@ -42,7 +42,7 @@ def upload_image(request):
 
 @api_view(['POST', ])
 def upload_wiki(request):
-    s3 = S3Storage(TEST_S3_BUCKET)
+    s3 = S3Storage(AWS_BUCKET_ORG_WIKI)
     response_data = {}
     if request.method == 'POST':
         form = WikiFileForm(request.POST)
@@ -58,7 +58,7 @@ def upload_wiki(request):
 
 @api_view(['POST', ])
 def get_items(request):
-    s3 = S3Storage(TEST_S3_BUCKET)
+    s3 = S3Storage(AWS_BUCKET_ORG_WIKI)
     response_data = {}
     if request.method == 'POST':
         form = GetKeysForm(request.data)
