@@ -44,14 +44,6 @@ class S3Storage:
             return True
         return False
 
-    def is_key_exist(self, key_name):
-        keys = self.bucket.get_all_keys()
-        for key in keys:
-            print(key.name)
-            # if key_name == key.name:
-            #     return True
-        return False
-
     def upload_validator(self, key_name, is_new):
         if is_new and self.is_file_exist(key_name):
             raise Exception('key %s already exist !' % key_name)

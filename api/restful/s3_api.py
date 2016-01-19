@@ -67,8 +67,7 @@ def get_items(request):
             key_spec = form.cleaned_data['spec'] or None
             key_suffix = form.cleaned_data['suffix'] or '/'
             key_marker = form.cleaned_data['marker'] or ''
-            if s3.is_key_exist(key_prefix):
-                response_data['result_list'] = s3.get_sub_keys_with_spec(key_prefix, key_spec, key_suffix, key_marker)
-                return Response(data=response_data, status=status.HTTP_200_OK)
+            response_data['result_list'] = s3.get_sub_keys_with_spec(key_prefix, key_spec, key_suffix, key_marker)
+            return Response(data=response_data, status=status.HTTP_200_OK)
         return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
     return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
