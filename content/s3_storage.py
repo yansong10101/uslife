@@ -39,13 +39,21 @@ class S3Storage:
         self.connection = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY)
         self.bucket = self.get_bucket(bucket_name)
 
-    def is_key_exists(self, key_name):
+    def is_file_exist(self, key_name):
         if self.bucket.get_key(key_name):
             return True
         return False
 
+    def is_key_exist(self, key_name):
+        keys = self.bucket.get_all_keys()
+        for key in keys:
+            print(key.name)
+            # if key_name == key.name:
+            #     return True
+        return False
+
     def upload_validator(self, key_name, is_new):
-        if is_new and self.is_key_exists(key_name):
+        if is_new and self.is_file_exist(key_name):
             raise Exception('key %s already exist !' % key_name)
         return True
 
@@ -84,8 +92,6 @@ class S3Storage:
         :param marker: for paging usage
         :return: a list of keys that handles paging
         """
-        if not prefix or prefix == '/':
-            prefix = ""
         keys = self.bucket.list(prefix=prefix, delimiter=suffix, marker=marker)
         key_name_list = [key_name.name for key_name in keys]
         return key_name_list
@@ -97,7 +103,7 @@ class S3Storage:
         :param spec: Type: String, check keys if end with specific string
         :param suffix:
         :param marker:
-        :return: list of Key Prefix objects
+        :return: list of Key Prefix objects, None if request key does not exist
         """
         key_list = self.get_sub_keys(prefix, suffix, marker)
         if not spec:
@@ -130,7 +136,7 @@ class S3Storage:
             raise Exception('Invalid file type : Not a image!')
 
     def upload_wiki(self, file, new_key, old_key=None):
-        if old_key and self.is_key_exists(old_key):
+        if old_key and self.is_file_exist(old_key):
             self.delete_file(old_key)
         self._upload_file(file, new_key, 'text/plain', True)
         return new_key
