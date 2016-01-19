@@ -11,7 +11,6 @@ def login(request):
             user = form.authenticate()
             if user:
                 django_login(request, user)
-                request.session['user_role'] = request.POST['user_role']
                 return Response(data={'result': 'success'}, status=status.HTTP_200_OK)
         return Response(data={'result': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
     return Response(data={'result': 'Invalid HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
