@@ -47,6 +47,7 @@ urlpatterns = patterns(
     url(r'portal/image/upload/$', s3_api.upload_image, name='image-upload'),
     url(r'portal/wiki/upload/$', s3_api.upload_wiki, name='wiki-upload'),
     url(r'portal/keys/get/$', s3_api.get_items, name='get-keys'),
+    url(r'portal/keys/delete/$', s3_api.delete_wiki, name='delete-keys'),
 
     url(r'portal/customer/signup/$', user_api.customer_signup, name='customer-signup'),
     url(r'portal/user/login/$', user_api.login, name='user-login'),

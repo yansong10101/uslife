@@ -72,3 +72,16 @@ def get_items(request):
             return Response(data=response_data, status=status.HTTP_200_OK)
         return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
     return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['POST', ])
+def delete_wiki(request):
+    s3 = S3Storage(AWS_BUCKET_ORG_WIKI)
+    response_data = {}
+    if request.method == 'POST':
+        key_name = request.POST['key_name'] or None
+        if key_name:
+            s3.delete_file(key_name)
+            return Response(data=response_data, status=status.HTTP_200_OK)
+        return Response(data=response_data, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)

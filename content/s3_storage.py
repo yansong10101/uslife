@@ -153,7 +153,7 @@ class S3Storage:
 
     def delete_file(self, key_name):
         target_key = self.bucket.get_key(key_name)
-        if target_key is not None:
+        if target_key:
             target_key.delete()
 
     def create_bucket(self, bucket_name):
