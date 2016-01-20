@@ -128,13 +128,14 @@ class S3Storage:
             raise Exception('Invalid file type : Not a image!')
 
     def upload_wiki(self, file, new_key, old_key=None):
-        if old_key and self.is_file_exist(old_key):
-            self.delete_file(old_key)
         # Failed to save if:
         # 1. old_key is None and new_key already exist
         # 2. old_key has value and old_key not equals to new_key and new_key already exist
-        elif (old_key is None or (old_key and old_key != new_key)) and self.is_file_exist(new_key):
+        if (old_key is None or (old_key and old_key != new_key)) and self.is_file_exist(new_key):
+            print(old_key, new_key)
             return None
+        if old_key and self.is_file_exist(old_key):
+            self.delete_file(old_key)
         self._upload_file(file, new_key, 'text/plain', True)
         return new_key
 
