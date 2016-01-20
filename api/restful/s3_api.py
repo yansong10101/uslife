@@ -46,13 +46,14 @@ def upload_wiki(request):
     response_data = {}
     if request.method == 'POST':
         form = WikiFileForm(request.POST)
-        if not form.is_valid():
-            return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
-        new_key_name = form.cleaned_data['new_path']
-        old_key_name = form.cleaned_data['old_path']
-        page = form.cleaned_data['page']
-        s3_key = s3.upload_wiki(page, new_key_name, old_key_name)
-        return Response(data={'s3_key': s3_key}, status=status.HTTP_201_CREATED)
+        if form.is_valid():
+            old_key_name = form.cleaned_data['old_path'] or None
+            new_key_name = form.cleaned_data['new_path']
+            page = form.cleaned_data['page']
+            s3_key = s3.upload_wiki(page, new_key_name, old_key_name)
+            if s3_key:
+                return Response(data={'s3_key': s3_key}, status=status.HTTP_201_CREATED)
+        return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
     return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
