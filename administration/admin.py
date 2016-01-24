@@ -37,7 +37,7 @@ class CustomerAdmin(UserAdmin):
     # form = CustomerChangeForm
     add_form = CustomerCreationForm
 
-    list_display = ('email', 'is_active', 'is_admin', 'first_name', 'last_name', )
+    list_display = ('pk', 'email', 'is_active', 'is_admin', 'first_name', 'last_name', )
     list_filter = ('is_admin', )
     fieldsets = (
         (None, {'fields': ('email', 'password', ), }),
