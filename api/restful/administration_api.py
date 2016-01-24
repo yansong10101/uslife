@@ -65,6 +65,7 @@ def create_org_admin(request):
 
 def update_admin_permission_group(user, permission_groups):
     if isinstance(user, OrgAdmin):
+        user.permission_group.all().delete()
         for group in permission_groups:
             user.permission_group.add(group)
         user.save()

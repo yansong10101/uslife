@@ -13,4 +13,5 @@ class FeatureAdmin(admin.ModelAdmin):
     ordering = ('feature_name', )
 
 admin.site.register(FeatureGroup, FeatureGroupAdmin)
-admin.site.register(Feature, FeatureAdmin)
+# We want to use API to create feature, it will auto generate corresponding permissions
+# admin.site.register(Feature, FeatureAdmin)

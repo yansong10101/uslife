@@ -61,7 +61,8 @@ class PermissionGroupListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = PermissionGroup
-        fields = ('pk', 'detail_url', 'group_name', 'permission', 'is_org_admin', 'is_super_user', 'is_active', 'user_level', )
+        fields = ('pk', 'detail_url', 'group_name', 'permission', 'is_org_admin', 'is_super_user', 'is_active',
+                  'user_level', )
 
 
 class PermissionGroupRetrieveSerializer(serializers.HyperlinkedModelSerializer):
