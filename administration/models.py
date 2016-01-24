@@ -54,6 +54,9 @@ class University(models.Model):
     def __str__(self):
         return self.university_name
 
+    def __unicode__(self):
+        return self.__str__()
+
     def has_relationship(self):
         return self.is_active
 

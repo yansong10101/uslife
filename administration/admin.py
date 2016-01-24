@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
 from administration.forms import *
+from content.forms import *
 
 admin.site.site_header = _('留美帮')
 admin.site.site_title = _('留美帮')
@@ -53,6 +54,14 @@ class CustomerAdmin(UserAdmin):
     ordering = ('email', )
     filter_horizontal = ()
 
+
+class PermissionGroupAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'group_name', 'is_org_admin', 'is_active', 'user_level', )
+    filter_horizontal = ('permission', )
+    ordering = ('group_name', )
+
+
 admin.site.register(University, UniversityAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(OrgAdmin, OrgUserAdmin)
+admin.site.register(PermissionGroup, PermissionGroupAdmin)

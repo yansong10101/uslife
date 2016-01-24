@@ -74,7 +74,7 @@ class CustomerUPGForm(forms.ModelForm):
 
     class Meta:
         model = CustomerUPG
-        fields = ('customer', 'university', 'permission_group', 'grant_level', )
+        fields = ('customer', 'university', 'permission_group', )
 
     def validate_existing(self):
         customer = self.cleaned_data.get('customer')
@@ -87,14 +87,13 @@ class CustomerUPGForm(forms.ModelForm):
         customer = self.cleaned_data.get('customer')
         university = self.cleaned_data.get('university')
         permission_group = self.cleaned_data.get('permission_group')
-        grant_level = self.cleaned_data.get('grant_level')
         customer_in_university = CustomerUPG.customer_upg.all().filter(customer=customer, university=university) or None
         if customer_in_university is None or customer_in_university.count() > 1:
             # TODO : write validation
-            raise Exception('Duplicated object !')
+            raise Exception('Unknown object exception: !' + customer_in_university)
         elif customer_in_university.count() == 1:
             customer_in_university[0].permission_group = permission_group
-            customer_in_university[0].grant_level = grant_level
+            customer_in_university[0].grant_level = permission_group.user_level
             customer_in_university[0].save()
         return customer_in_university[0]
 
@@ -171,5 +170,17 @@ class UserResetPassword(forms.Form):
         if user and password:
             user.set_password(password)
             user.save()
+            return user
+        return None
+
+
+class GrantUserPermissionForm(forms.Form):
+    username = forms.CharField(label='Username')
+
+    def authenticate(self):
+        username = self.cleaned_data.get('username')
+        user = Customer.customers.get_auth_customer(username) or OrgAdmin.org_admins.get_auth_admin(username)
+        if user:
+            user.backend = USER_BACKEND
             return user
         return None

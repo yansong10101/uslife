@@ -1,11 +1,16 @@
 from django.core.exceptions import ObjectDoesNotExist
-from uslife.settings import (AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_DEFAULT_SITE,
-                             AWS_BUCKET_USER_ARCHIVE, AWS_HEADERS, )
+from uslife.settings import (AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_DEFAULT_SITE, AWS_BUCKET_USER_ARCHIVE, )
 from boto.s3.connection import S3Connection
-from boto.s3.key import Key
 from django.core.files.base import ContentFile
 from datetime import datetime
 import mimetypes
+
+
+def make_org_s3_initial_directories(university_name, university_id):
+    # TODO : add university directory prefix
+    org_wiki_root = '%s_%s_wiki' % university_name, university_id
+    org_image_root = '%s_%s_image' % university_name, university_id
+    return dict({'wiki_root': org_wiki_root, 'image_root': org_image_root, })
 
 
 def make_image_filename(key_prefix, file_extension):

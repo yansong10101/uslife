@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from django import forms
-from content.s3_storage import S3Storage
+from content.s3_storage import S3Storage, make_org_s3_initial_directories
 from uslife.settings import AWS_BUCKET_ORG_WIKI
 
 TEST_S3_KEY_PREFIX = 'test-upload/demo-upload/'

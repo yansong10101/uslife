@@ -32,7 +32,7 @@ urlpatterns = patterns(
 
     url(r'org-admins/$', administration_api.OrgAdminList.as_view(), name='org-admin-list'),
     url(r'org-admins/(?P<pk>[0-9]+)/$', administration_api.OrgAdminRetrieve.as_view(), name='org-admin-retrieve'),
-    url(r'org-admin/create/$', administration_api.create_org_admin, name='org-admin-creation'),
+    url(r'org-admins/create/$', administration_api.create_org_admin, name='org-admin-creation'),
 
     url(r'customers/$', administration_api.CustomerList.as_view(), name='customer-list'),
     url(r'customers/(?P<pk>[0-9]+)/$', administration_api.CustomerRetrieve.as_view(), name='customer-retrieve'),
@@ -54,5 +54,6 @@ urlpatterns = patterns(
     url(r'portal/user/logout/$', user_api.logout, name='user-logout'),
     url(r'portal/user/change-password/$', user_api.change_password, name='change-password'),
     url(r'portal/user/reset-password/$', user_api.reset_password, name='reset-password'),
+    url(r'portal/grant-perm-group/admin/$', user_api.grant_admin_permission_groups, name='org-admin-grant-permissions'),
 )
 

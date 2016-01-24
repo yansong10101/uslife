@@ -1,6 +1,7 @@
-from api.restful.administration_api import *
+from api.utils import *
 from django.contrib.auth import logout as django_logout, login as django_login
-from administration.forms import UserAuthenticationForm, UserChangePasswordForm, UserResetPassword
+from administration.forms import (UserAuthenticationForm, UserChangePasswordForm, UserResetPassword,
+                                  GrantUserPermissionForm)
 
 
 @api_view(['POST', ])
@@ -11,14 +12,15 @@ def login(request):
             user = form.authenticate()
             if user:
                 django_login(request, user)
-                return Response(data={'result': 'success'}, status=status.HTTP_200_OK)
+                response_data = dict({'status': 'success', 'result': cache_user_permissions(user), })
+                return Response(data=response_data, status=status.HTTP_200_OK)
         return Response(data={'result': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
     return Response(data={'result': 'Invalid HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['POST', ])
 def customer_signup(request):
-    create_customer(request)
+    return create_customer(request)
 
 
 @api_view(['POST', ])
@@ -50,4 +52,19 @@ def reset_password(request):
                 django_login(request, user)
                 return Response(data={'result': 'success'}, status=status.HTTP_200_OK)
         return Response(data={'result': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'result': 'Invalid HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['POST', ])
+def grant_admin_permission_groups(request):
+    # FIXME : Check if user login as president
+    if request.method == 'POST':
+        form = GrantUserPermissionForm(request.POST)
+        permission_group_list = [int(i) for i in request.POST.getlist('permission_groups[]')]
+        if form.is_valid() and permission_group_list:
+            user = form.authenticate()
+            if isinstance(user, OrgAdmin):
+                update_admin_permission_group(user, permission_group_list)
+                return Response(data={'result': 'success'}, status=status.HTTP_200_OK)
+        return Response(data={'result': 'Invalid inputs'}, status=status.HTTP_400_BAD_REQUEST)
     return Response(data={'result': 'Invalid HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

@@ -63,6 +63,15 @@ def create_org_admin(request):
     return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+def update_admin_permission_group(user, permission_groups):
+    if isinstance(user, OrgAdmin):
+        for group in permission_groups:
+            user.permission_group.add(group)
+        user.save()
+        return user
+    return 'ERROR: No rights to edit !'
+
+
 # Customer APIs
 class CustomerList(generics.ListAPIView):
     queryset = Customer.customers
