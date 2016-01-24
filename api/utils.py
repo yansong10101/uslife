@@ -8,7 +8,7 @@ def _get_user_permissions(user):
         response_data['email'] = user.email
         response_data['role'] = 'customer'
         response_data['permission_groups'] = list()
-        upg_list = CustomerUPG.customer_upg.all().filter(customer=user)
+        upg_list = CustomerUPG.customer_upg.all().filter(customer=user) or []
         for upg in upg_list:
             org_feature_permissions = [dict(permision_id=permission.pk,
                                             permission_type=permission.permission_type,

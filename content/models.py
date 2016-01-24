@@ -145,12 +145,12 @@ class PermissionGroup(models.Model):
         (5, '黑名单'),
     )
     USER_LEVEL_MAP = {
-        0, '游客',
-        1, '在校生',
-        2, '临校生',
-        3, '毕业生',
-        4, '赞助商',
-        5, '黑名单',
+        0: '游客',
+        1: '在校生',
+        2: '临校生',
+        3: '毕业生',
+        4: '赞助商',
+        5: '黑名单',
     }
     permission = models.ManyToManyField(Permission, related_name='group_permission')
     group_name = models.CharField(max_length=150)
