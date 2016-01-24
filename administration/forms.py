@@ -79,10 +79,10 @@ class CustomerUPGForm(forms.ModelForm):
     def validate_existing(self):
         customer = self.cleaned_data.get('customer')
         university = self.cleaned_data.get('university')
-        customer_upg = CustomerUPG.objects.all().filter(customer=customer, university=university) or None
-        print(customer_upg)
-        if customer_upg and customer_upg.exists():
-            return True
+        customer_upg_list = CustomerUPG.objects.all().filter(university=university)
+        for customer_item in customer_upg_list:
+            if customer.pk == customer_item.pk:
+                return True
         return False
 
     def update_customer_university_group(self):
