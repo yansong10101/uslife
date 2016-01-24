@@ -79,7 +79,8 @@ class CustomerUPGForm(forms.ModelForm):
     def validate_existing(self):
         customer = self.cleaned_data.get('customer')
         university = self.cleaned_data.get('university')
-        customer_upg = CustomerUPG.customer_upg.all().filter(customer=customer, university=university) or None
+        customer_upg = CustomerUPG.objects.all().filter(customer=customer, university=university) or None
+        print(customer_upg)
         if customer_upg and customer_upg.exists():
             return True
         return False

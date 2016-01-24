@@ -226,8 +226,11 @@ class Customer(AbstractBaseUser):
 
 class CustomerUPGManager(models.Manager):
 
-    def create_customer_upg(self, **kwargs):
-        customer_upg = self.create(**kwargs)
+    @classmethod
+    def create_customer_upg(cls, **kwargs):
+        customer_upg = CustomerUPG(**kwargs)
+        customer_upg.grant_level = customer_upg.permission_group.user_level
+        customer_upg.save()
         return customer_upg
 
     def get_queryset(self, **kwargs):
