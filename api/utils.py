@@ -1,10 +1,13 @@
 from api.restful.administration_api import *
+from api.lmb_cache import LMBCache
+from administration.authentication import UserAuthentication
 # from api.restful.content_api import *
 
 
 def _get_user_permissions(user):
     response_data = dict()
     if isinstance(user, Customer):
+        response_data['user_id'] = user.pk
         response_data['email'] = user.email
         response_data['role'] = 'customer'
         response_data['permission_groups'] = list()
@@ -21,6 +24,7 @@ def _get_user_permissions(user):
                                                             'feature_permissions': org_feature_permissions,
                                                             'grant_level': upg.grant_level, }))
     elif isinstance(user, OrgAdmin):
+        response_data['user_id'] = user.pk
         response_data['username'] = user.username
         response_data['role'] = 'admin'
         response_data['university_id'] = user.university.pk
@@ -40,8 +44,23 @@ def _get_user_permissions(user):
     return response_data
 
 
-def cache_user_permissions(user):
-    return _get_user_permissions(user)
+def get_or_create_cache_token(token, user_dict):
+    user_cache = LMBCache()
+    if user_cache.is_exists(token):
+        cached_data = user_cache.get(token)
+        if cached_data['user_id'] == user_dict['user_id'] and cached_data['role'] == user_dict['role']:
+            user_cache.delete(token)
+    token = UserAuthentication.generate_key()
+    while user_cache.is_exists(token):
+        token = UserAuthentication.generate_key()
+    user_cache.set_token(token, user_dict)
+    return token
+
+
+def cache_user(user, token):
+    response_data = _get_user_permissions(user)
+    response_data['token'] = get_or_create_cache_token(token, response_data)
+    return response_data
 
 
 def _response_message_handler(code, response_dict, name=''):

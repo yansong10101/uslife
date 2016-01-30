@@ -9,10 +9,10 @@ def login(request):
     if request.method == 'POST':
         form = UserAuthenticationForm(request.POST)
         if form.is_valid():
-            user = form.authenticate()
+            (user, token) = form.authenticate()
             if user:
                 django_login(request, user)
-                response_data = dict({'status': 'success', 'result': cache_user_permissions(user), })
+                response_data = dict({'status': 'success', 'result': cache_user(user, token), })
                 return Response(data=response_data, status=status.HTTP_200_OK)
         return Response(data={'result': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
     return Response(data={'result': 'Invalid HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -25,8 +25,13 @@ def customer_signup(request):
 
 @api_view(['POST', ])
 def logout(request):
-    django_logout(request)
-    return Response(data={}, status=status.HTTP_200_OK)
+    if request.method == 'POST':
+        token = request.POST['token']
+        user_cache = LMBCache()
+        user_cache.delete(token)
+        django_logout(request)
+        return Response(data={}, status=status.HTTP_200_OK)
+    return Response(data={'result': 'Invalid HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['POST', ])

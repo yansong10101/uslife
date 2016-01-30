@@ -103,14 +103,16 @@ class CustomerUPGForm(forms.ModelForm):
 class UserAuthenticationForm(forms.Form):
     username = forms.CharField(label='Username')
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    token = forms.CharField(label='Token', required=False)
 
     def authenticate(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
+        token = self.cleaned_data.get('token') or None
         user = Customer.customers.get_auth_customer(username) or OrgAdmin.org_admins.get_auth_admin(username)
         if user and user.check_password(password):
             user.backend = USER_BACKEND
-            return user
+            return user, token
         return None
 
 
