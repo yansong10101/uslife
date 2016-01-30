@@ -1,7 +1,6 @@
 from api.restful.administration_api import *
 from api.lmb_cache import LMBCache
 from administration.authentication import UserAuthentication
-# from api.restful.content_api import *
 
 
 def _get_user_permissions(user):
@@ -53,6 +52,7 @@ def get_or_create_cache_token(token, user_dict):
     token = UserAuthentication.generate_key()
     while user_cache.is_exists(token):
         token = UserAuthentication.generate_key()
+    user_dict['last_modified'] = user_cache.make_datetime_version()
     user_cache.set_token(token, user_dict)
     return token
 
@@ -63,14 +63,34 @@ def cache_user(user, token):
     return response_data
 
 
-def _response_message_handler(code, response_dict, name=''):
+def get_cache(key):
+    lmb_cache = LMBCache()
+    return lmb_cache.get(key)
 
-    status_code_map = {
-        400: LMBBadRequest,
-        405: LMBMethodNotAllowed,
-    }
 
-    return
+def is_authenticate_user(token):
+    return UserAuthentication.is_authenticate(token)
+
+
+def _response_message_handler(code=None, message=None):
+
+    if code:
+        status_code_map = {
+            200: _response_message_handler(message='success'),
+            201: _response_message_handler(message='created'),
+            400: LMBBadRequest,
+            405: LMBMethodNotAllowed,
+        }
+
+        return status_code_map[code]
+    elif message:
+        return {'result': message}
+
+    return {'result': LMBError}
+
+
+def response_message(code=None, message=None):
+    return _response_message_handler(code, message)
 
 
 class LMBError:

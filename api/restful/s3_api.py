@@ -4,6 +4,7 @@ from rest_framework import status
 from django import forms
 from content.s3_storage import S3Storage, make_org_s3_initial_directories
 from uslife.settings import AWS_BUCKET_ORG_WIKI
+from api.utils import response_message
 
 TEST_S3_KEY_PREFIX = 'test-upload/demo-upload/'
 
@@ -37,7 +38,7 @@ def upload_image(request):
         key_prefix = TEST_S3_KEY_PREFIX
         s3_key = s3.upload_image(request.FILES['file'], key_prefix)
         return Response(data={'s3_key': s3_key}, status=status.HTTP_201_CREATED)
-    return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return Response(data=response_message(code=405), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['POST', ])
@@ -54,7 +55,7 @@ def upload_wiki(request):
             if s3_key:
                 return Response(data={'s3_key': s3_key}, status=status.HTTP_201_CREATED)
         return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
-    return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return Response(data=response_message(code=405), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['POST', ])
@@ -71,7 +72,7 @@ def get_items(request):
             response_data['result_list'] = s3.get_sub_keys_with_spec(key_prefix, key_spec, key_suffix, key_marker)
             return Response(data=response_data, status=status.HTTP_200_OK)
         return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
-    return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return Response(data=response_message(code=405), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['POST', ])
@@ -83,6 +84,5 @@ def delete_wiki(request):
         if key_name and s3.is_file_exist(key_name):
             s3.delete_file(key_name)
             return Response(data=response_data, status=status.HTTP_200_OK)
-        response_data['error'] = 'Invalid key name'
-        return Response(data=response_data, status=status.HTTP_400_BAD_REQUEST)
-    return Response(data=response_data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(data=response_message(message='Invalid key name'), status=status.HTTP_400_BAD_REQUEST)
+    return Response(data=response_message(code=405), status=status.HTTP_405_METHOD_NOT_ALLOWED)

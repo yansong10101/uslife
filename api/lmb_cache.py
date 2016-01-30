@@ -55,12 +55,13 @@ class LMBCache:
     def delete(self, key, version=None):
         return self.__delete__(key, version)
 
-    def close_connection(self):
-        cache
+    @classmethod
+    def close_connection(cls):
+        cache.close()
 
     @classmethod
-    def make_version(cls):
-        return datetime.now().strftime('%Y-%m-%d')
+    def make_datetime_version(cls):
+        return datetime.now().strftime('%Y-%m-%d %H:%M')
 
     @classmethod
     def all(cls):

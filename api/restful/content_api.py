@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from content.forms import FeatureGroupForm, FeatureForm, PermissionGroupForm
 from content.models import PermissionGroupManager
 from django.shortcuts import get_object_or_404
+from api.utils import response_message
 
 
 # Feature Group APIs
@@ -36,7 +37,7 @@ def create_update_feature_group(request, pk=None):
                 return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
             form.save()
         return Response(data=response_data, status=status.HTTP_201_CREATED)
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return Response(data=response_message(code=405), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 # Feature APIs
@@ -67,7 +68,7 @@ def create_update_feature(request, pk=None):
                 return Response(data=form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)
             form.save()
         return Response(data=response_data, status=status.HTTP_201_CREATED)
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return Response(data=response_message(code=405), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 # Permission APIs
@@ -122,4 +123,4 @@ def create_update_permission_group(request, pk=None):
         permission_group = get_object_or_404(PermissionGroup, pk=pk)
         permission_group.is_active = False
         permission_group.save()
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return Response(data=response_message(code=405), status=status.HTTP_405_METHOD_NOT_ALLOWED)
